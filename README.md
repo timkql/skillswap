@@ -26,13 +26,6 @@ SkillSwap is a platform that connects people who want to learn new skills with t
 
 ### Environment Variables Setup
 
-#### Backend (.env)
-Create a `.env` file in the `api` directory with the following variables:
-```env
-
-# Firebase Configuration
-FIREBASE_CREDENTIALS_PATH=path_to_firebase_credentials.json
-
 #### Frontend (.env)
 Create a `.env` file in the `skillswap-react` directory with the following variables:
 ```env
@@ -179,7 +172,7 @@ The `start` command will:
 - Map/Stats on what learning/teaching activity around your area
 - Consistency and progress badges
 
-##Future Backend Features:
+## Future Backend Features:
 - Delete availability data from the past
 - Setup github secrets for env variables
 
