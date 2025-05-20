@@ -172,7 +172,7 @@ The `start` command will:
 - Map/Stats on what learning/teaching activity around your area
 - Consistency and progress badges
 
-##Future Backend Features:
+## Future Backend Features:
 - Delete availability data from the past
 - Setup github secrets for env variables
 
