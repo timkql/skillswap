@@ -103,20 +103,6 @@ REACT_APP_FIREBASE_APP_ID=your_firebase_app_id
    - Save the file as `service-account.json` in the `api` directory
 
 
-7. **Security Considerations**:
-   - Keep `service-account.json` secure and never commit it to version control
-   - Add `service-account.json` to `.gitignore`
-   - Use different service accounts for development and production
-   - Regularly rotate service account keys
-   - Monitor API usage in Google Cloud Console
-
-8. **Troubleshooting Calendar Integration**:
-   - Verify service account has correct permissions
-   - Check calendar ID is correct
-   - Ensure service account key is properly loaded
-   - Monitor API quotas and limits
-   - Check Google Cloud Console for any API errors
-
 ## 🚀 Setup Instructions
 
 ### 1. Clone the Repository
@@ -160,6 +146,10 @@ The `start` command will:
 4. **Search**: Find specific teachers by skill
 5. **Request Sessions**: Schedule learning sessions with matched users via sending a request
 6. **Attend Sessions**: When the teacher accepts your request, a calendar invite with a meets link will be available
+
+## Design Considerations
+- Firebase may not be the most ideal storage in the long run, but it was the quickest to setup
+- Features were prioritzed based on value provided to users. So I wanted to make sure users could look for and request for lessons from appropriate teachers.
 
 ## Future Features
 - Learning credits
