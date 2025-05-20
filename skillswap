@@ -1,0 +1,197 @@
+#!/bin/bash
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Function to print colored messages
+print_message() {
+    echo -e "${GREEN}[SkillSwap]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[Error]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[Warning]${NC} $1"
+}
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Function to check prerequisites
+check_prerequisites() {
+    print_message "Checking prerequisites..."
+    
+    # Check Node.js
+    if ! command_exists node; then
+        print_error "Node.js is not installed. Please install Node.js v14 or higher."
+        exit 1
+    fi
+    
+    # Check Python
+    if ! command_exists python3; then
+        print_error "Python 3 is not installed. Please install Python 3.8 or higher."
+        exit 1
+    fi
+    
+    # Check npm
+    if ! command_exists npm; then
+        print_error "npm is not installed. Please install npm."
+        exit 1
+    fi
+    
+    # Check pip
+    if ! command_exists pip3; then
+        print_error "pip3 is not installed. Please install pip3."
+        exit 1
+    fi
+}
+
+# Function to setup backend
+setup_backend() {
+    print_message "Setting up backend..."
+    
+    cd api || {
+        print_error "Could not find api directory"
+        exit 1
+    }
+    
+    # Create virtual environment if it doesn't exist
+    if [ ! -d "venv" ]; then
+        print_message "Creating virtual environment..."
+        python3 -m venv venv
+    fi
+    
+    # Activate virtual environment
+    source venv/bin/activate || {
+        print_error "Failed to activate virtual environment"
+        exit 1
+    }
+    
+    # Install/update pip
+    print_message "Updating pip..."
+    pip install --upgrade pip
+    
+    # Install/update requirements
+    print_message "Installing/updating Python dependencies..."
+    pip install -r requirements.txt
+    
+    # Deactivate virtual environment
+    deactivate
+    
+    cd ..
+}
+
+# Function to setup frontend
+setup_frontend() {
+    print_message "Setting up frontend..."
+    
+    cd skillswap-react || {
+        print_error "Could not find skillswap-react directory"
+        exit 1
+    }
+    
+    # Install/update npm dependencies
+    print_message "Installing/updating Node.js dependencies..."
+    npm install
+    
+    cd ..
+}
+
+# Function to update everything
+update_all() {
+    print_message "Updating all dependencies..."
+    
+    # Update backend
+    setup_backend
+    
+    # Update frontend
+    setup_frontend
+    
+    print_message "Update completed successfully!"
+}
+
+# Function to handle script termination
+cleanup() {
+    print_message "Shutting down servers..."
+    if [ ! -z "$FASTAPI_PID" ]; then
+        kill $FASTAPI_PID 2>/dev/null
+    fi
+    if [ ! -z "$REACT_PID" ]; then
+        kill $REACT_PID 2>/dev/null
+    fi
+    exit 0
+}
+
+# Function to start the development servers
+start_servers() {
+    print_message "Starting development servers..."
+    
+    # Check if the virtual environment exists
+    if [ ! -d "api/venv" ]; then
+        print_error "Virtual environment not found. Please run './skillswap setup' first."
+        exit 1
+    fi
+    
+    # Check if node_modules exists
+    if [ ! -d "skillswap-react/node_modules" ]; then
+        print_error "Node modules not found. Please run './skillswap setup' first."
+        exit 1
+    fi
+    
+    # Set up trap for cleanup on script termination
+    trap cleanup SIGINT SIGTERM
+    
+    # Start FastAPI server
+    print_message "Starting FastAPI server..."
+    cd api
+    source venv/bin/activate
+    uvicorn main:app --reload &
+    FASTAPI_PID=$!
+    cd ..
+    
+    # Start React development server
+    print_message "Starting React development server..."
+    cd skillswap-react
+    npm start &
+    REACT_PID=$!
+    cd ..
+    
+    print_message "Servers are running!"
+    print_message "FastAPI server: http://localhost:8000"
+    print_message "React app: http://localhost:3000"
+    print_message "Press Ctrl+C to stop the servers"
+    
+    # Wait for both processes
+    wait $FASTAPI_PID $REACT_PID
+}
+
+# Main script
+case "$1" in
+    "update")
+        check_prerequisites
+        update_all
+        ;;
+    "setup")
+        check_prerequisites
+        setup_backend
+        setup_frontend
+        print_message "Setup completed successfully!"
+        ;;
+    "start")
+        start_servers
+        ;;
+    *)
+        echo "Usage: ./skillswap {update|setup|start}"
+        echo "  update: Update all dependencies"
+        echo "  setup: Initial setup of the project"
+        echo "  start: Start both frontend and backend servers"
+        exit 1
+        ;;
+esac 
