@@ -74,6 +74,30 @@ function Onboarding() {
             alignItems: 'center',
           }}
         >
+          <Typography 
+            variant="h2" 
+            component="h1" 
+            sx={{ 
+              mb: 4,
+              fontWeight: 700,
+              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              backgroundClip: 'text',
+              textFillColor: 'transparent',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
+          >
+            SkillSwap
+          </Typography>
+          <Typography 
+            variant="h6" 
+            color="text.secondary" 
+            align="center" 
+            sx={{ mb: 4 }}
+          >
+            Connect, Learn, and Share Skills
+          </Typography>
+
           <Paper elevation={3} sx={{ width: '100%', mt: 3 }}>
             <Tabs
               value={tabValue}
