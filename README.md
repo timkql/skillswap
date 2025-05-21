@@ -18,6 +18,9 @@ SkillSwap is a platform that connects people who want to learn new skills with t
 ### Backend
 - FastAPI
 
+## Auth
+- Firebase Auth
+
 ### Database
 - Firestore
 - Firebase Storage (Images)
