@@ -166,6 +166,7 @@ The `start` command will:
 - Delete availability data from the past
 - Setup github secrets for env variables
 
-## Bugs to fix
+## To fix
+- Cleanup (e.g. remove unused imports, refactor large constant arrays & repeated code)
 - Generated Meets link might not work
 - User is routed to profile setup screen before dashboard
